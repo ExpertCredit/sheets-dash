@@ -793,7 +793,7 @@
     const frameOverlays = document.querySelectorAll('.frame-overlay');
     
     // Вебхук URL
-    const WEBHOOK_URL = 'https://workalmaty.ru/webhook-test/281ce8ad-218c-4f84-8afa-4467af1e7778';
+    const WEBHOOK_URL = 'https://workalmaty.ru/webhook/281ce8ad-218c-4f84-8afa-4467af1e7778';
     
     // Обновление статуса времени
     function updateDateTime() {
@@ -930,7 +930,7 @@
         }
         
         // Показать уведомление об успешной отправке
-        showNotification('Сообщение успешно отправлено через вебхук', true);
+        showNotification('Сообщение успешно отправлено', true);
         
         return true;
       } catch (error) {
