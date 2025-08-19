@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Аналитический дашборд</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-dark: #0a192f;
+      --secondary-dark: #112240;
+      --accent: #64ffda;
+      --accent-light: #8ed16f;
+      --text-light: #ccd6f6;
+      --text-lighter: #a8b2d1;
+      --card-bg: rgba(17, 34, 64, 0.7);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, var(--primary-dark) 0%, #0d2b52 100%);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+	
+	/* Стили для красивых кнопок соцсетей */
+	.social-btn {
+	  display: flex;
+	  flex-direction: column;
+	  align-items: center;
+	  text-decoration: none;
+	  color: var(--text-lighter);
+	  transition: all 0.3s ease;
+	  width: 90px;
+	}
+
+	.social-btn:hover {
+	  transform: translateY(-5px);
+	  color: var(--accent);
+	}
+
+	.social-btn:hover .social-icon {
+	  background: linear-gradient(135deg, rgba(var(--social-rgb), 0.3), transparent) !important;
+	  box-shadow: 0 5px 15px rgba(var(--social-rgb), 0.3);
+	  border-color: var(--social-color);
+	}
+
+	.social-icon {
+	  width: 40px;
+	  height: 40px;
+	  border-radius: 18px;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  font-size: 28px;
+	  border: 2px solid rgba(100, 255, 218, 0.2);
+	  transition: all 0.3s ease;
+	  margin-bottom: 10px;
+	}
+
+	.social-btn:hover .social-icon i {
+	  color: var(--social-color);
+	  text-shadow: 0 0 10px rgba(var(--social-rgb), 0.5);
+	}
+
+	.social-btn span {
+	  font-size: 13px;
+	  font-weight: 500;
+	  text-align: center;
+	}
+
+	/* Цвета для соцсетей */
+	.fa-whatsapp { color: #25D366; }
+	.fa-telegram { color: #0088cc; }
+	.fa-instagram { color: #E1306C; }
+
+	/* Для градиентных эффектов */
+	:root {
+	  --whatsapp-rgb: 37, 211, 102;
+	  --telegram-rgb: 0, 136, 204;
+	  --instagram-rgb: 225, 48, 108;
+	}
+
+    /* Шапка */
+    header {
+      background: var(--primary-dark);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo-icon {
+      background: var(--accent);
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-dark);
+      font-size: 20px;
+      font-weight: bold;
+	  margin-left: 40px;
+    }
+
+    .logo-text {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .nav-controls {
+      display: flex;
+      gap: 15px;
+	  margin-right: 40px;
+    }
+
+    .nav-btn {
+      background: var(--secondary-dark);
+      border: none;
+      padding: 12px 25px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-light);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+	
+	.info-card:first-child::after {
+	    content: " ↓";
+	    position: absolute;
+	    bottom: 8px;
+	    right: 8px;
+	    background: rgba(100, 255, 218, 0.9);
+	    color: #0a192f;
+	    padding: 4px 8px;
+	    border-radius: 12px;
+	    font-size: 11px;
+	    font-weight: bold;
+	    animation: scrollIndicatorPulse 2s ease-in-out infinite;
+	    pointer-events: none;
+	    z-index: 10;
+	    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+	  }
+	  
+	  @keyframes scrollIndicatorPulse {
+	     0%, 100% {
+	       opacity: 0.7;
+	       transform: scale(1);
+	     }
+	     50% {
+	       opacity: 1;
+	       transform: scale(1.05);
+	     }
+	   }
+	   
+	   .scroll-indicator {
+	       position: absolute;
+	       right: 5px;
+	       top: 60px;
+	       width: 4px;
+	       height: 150px;
+	       background: rgba(100, 255, 218, 0.3);
+	       border-radius: 2px;
+	       overflow: hidden;
+	     }
+
+	     .scroll-indicator::after {
+	       content: "";
+	       position: absolute;
+	       top: 0;
+	       left: 0;
+	       width: 100%;
+	       height: 30%;
+	       background: linear-gradient(180deg, #64ffda, #8ed16f);
+	       border-radius: 2px;
+	       animation: scrollBarAnimation 3s ease-in-out infinite;
+	       box-shadow: 0 0 8px rgba(100, 255, 218, 0.8);
+	     }
+
+	     @keyframes scrollBarAnimation {
+	       0%, 100% { transform: translateY(0); }
+	       50% { transform: translateY(200%); }
+	     }
+
+    .nav-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+      background: rgba(100, 255, 218, 0.1);
+    }
+
+    .nav-btn.active {
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      color: var(--primary-dark);
+      box-shadow: 0 0 15px rgba(100, 255, 218, 0.4);
+    }
+
+    /* Основной контент */
+    main {
+      flex: 1;
+      display: flex;
+      padding: 20px;
+      gap: 20px;
+      max-width: 1600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .content-container {
+      flex: 3;
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(100, 255, 218, 0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+  
+  /* НОВЫЕ СТИЛИ ДЛЯ ПОЛОСЫ ПРОКРУТКИ */
+  .info-card:first-child .info-content {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-lighter);
+    max-height: 235px;
+    overflow-y: scroll !important; /* Ключевое изменение - scroll вместо auto */
+    padding-right: 15px;
+    
+    /* Стили для Firefox */
+    scrollbar-width: thin !important;
+    scrollbar-color: #64ffda #112240 !important;
+  }
+
+  /* Стили для Chrome, Safari, Edge */
+  .info-card:first-child .info-content::-webkit-scrollbar {
+    width: 14px !important;
+  }
+
+  .info-card:first-child .info-content::-webkit-scrollbar-track {
+    background: rgba(100, 255, 218, 0.3) !important;
+    border-radius: 8px;
+    border: 2px solid #0a192f;
+    margin: 5px 0;
+  }
+
+  .info-card:first-child .info-content::-webkit-scrollbar-thumb {
+    background-color: #64ffda !important;
+    border-radius: 8px;
+    border: 3px solid #0a192f;
+    box-shadow: 0 0 5px rgba(100, 255, 218, 0.8);
+  }
+
+  /* Убираем все hover-эффекты */
+  .info-card:first-child .info-content:hover {
+    scrollbar-color: #64ffda #112240 !important;
+  }
+	
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Контентная область */
+    #content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(10, 25, 47, 0.5);
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    iframe {
+      width: 100%;
+      height: 140%;
+      border: none;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Панель загрузки */
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(10, 25, 47, 0.8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .loading-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(100, 255, 218, 0.2);
+      border-top: 5px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Информационная панель */
+    .info-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .info-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(100, 255, 218, 0.1);
+      transition: var(--transition);
+      animation: fadeIn 0.6s ease-out forwards;
+    }
+
+   
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .info-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+    }
+
+    .info-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .info-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(100, 255, 218, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    .info-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-light);
+    }
+
+  
+
+    .highlight {
+      color: var(--accent-light);
+      font-weight: 500;
+    }
+	
+  	.logo-icon img {
+  	  width: 45px;   /* ширина */
+  	  height: auto;  /* высота автоматически */
+  	}
+
+    /* Футер */
+    footer {
+      background: var(--primary-dark);
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(100, 255, 218, 0.1);
+    }
+
+    .message-input-container {
+      flex: 1;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      position: relative;
+	  margin-left: 40px;
+    }
+
+	#message-input {
+	  flex: 1;
+	  padding: 15px 25px;
+	  border-radius: 30px;
+	  border: none;
+	  background: var(--secondary-dark);
+	  color: var(--text-light);
+	  font-size: 16px;
+	  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2), 
+	              0 0 0 2px var(--accent); /* всегда светится */
+	  transition: var(--transition);
+	}
+
+    #message-input:focus {
+      outline: none;
+    }
+
+    #send-btn {
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(100, 255, 218, 0.4);
+      transition: var(--transition);
+    }
+
+    #send-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(100, 255, 218, 0.6);
+    }
+
+    .status-panel {
+      background: var(--secondary-dark);
+      padding: 12px 25px;
+      border-radius: 30px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+	  margin-left: 15px;
+    }
+
+    .status-panel i {
+      color: var(--accent);
+    }
+
+    /* Уведомление о сообщении */
+    .message-notification {
+      position: absolute;
+      bottom: 70px;
+      left: 0;
+      background: var(--accent-light);
+      color: var(--primary-dark);
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 500;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .message-notification.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .message-notification.error {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    /* Оверлеи для фреймов */
+    .frame-overlay {
+      position: absolute;
+      z-index: 5;
+      background: linear-gradient(135deg, var(--primary-dark) 0%, #0d2b52 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+      text-align: center;
+    }
+
+    .table-overlay-top {
+      /* Убрали верхнюю плашку для таблицы */
+      display: none;
+    }
+
+    .table-overlay-bottom {
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 30px;
+    }
+
+    .dashboard-overlay-top {
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+    }
+
+    /* Специальный контейнер для дашборда */
+    .dashboard-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .dashboard-frame {
+      width: 100%;
+      height: calc(100% + 20px); /* Увеличиваем высоту для прокрутки */
+      border: none;
+      margin-top: 1px; /* Сдвигаем вверх */
+    }
+
+    /* Адаптивность */
+    @media (max-width: 1100px) {
+      main {
+        flex-direction: column;
+      }
+      
+      .info-panel {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      
+      .info-card {
+        flex: 1 1 45%;
+        min-width: 300px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .nav-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .info-card {
+        flex: 1 1 100%;
+      }	
+      
+      footer {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .status-panel {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .message-notification {
+        bottom: 120px;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        width: 90%;
+      }
+      
+      .message-notification.show {
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+	<div class="logo">
+	      <div class="logo-icon">
+	        <img src="logoIBDataLink.png" alt="IBDataLink Logo">
+	      </div>
+	      <div class="logo-text">IBDataLink</div>
+	    </div>
+    
+    <div class="nav-controls">
+      <button id="tableBtn" class="nav-btn active">
+        <i class="fas fa-table"></i> Таблица
+      </button>
+      <button id="dashboardBtn" class="nav-btn">
+        <i class="fas fa-chart-pie"></i> Дашборд
+      </button>
+    </div>
+  </header>
+  
+  <main>
+    <div class="content-container">
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="fas fa-database"></i> <span id="content-title">Аналитическая таблица</span>
+        </h2>
+        <button class="control-btn" id="refreshBtn">
+        </button>
+      </div>
+      
+      <div id="content">
+        <!-- Загрузочный экран -->
+        <div class="loading-overlay" id="loadingOverlay">
+          <div class="spinner"></div>
+          <p>Загрузка данных...</p>
+        </div>
+        
+        <!-- Оверлеи для таблицы -->
+        
+        <!-- Оверлей для дашборда -->
+        
+        <!-- Контейнер для дашборда с увеличенной высотой -->
+        <div id="dashboardContainer" class="dashboard-container" style="display: none;">
+          <iframe id="dashboardFrame" class="dashboard-frame" src="https://lookerstudio.google.com/embed/reporting/5a0c901a-99b7-40ed-9f16-0bf647f9d84b/page/p_a7b0hgzyud"></iframe>
+        </div>
+        
+        <!-- Контент через iframe для таблицы -->
+        <iframe id="contentFrame" src="https://docs.google.com/spreadsheets/d/1v09V1VGakWBnTv0NIDg2rCit5ejtdg1Lt0u_ROAkL-I/edit?gid=0#gid=0"></iframe>
+      </div>
+    </div>
+    
+    <div class="info-panel">
+      <div class="info-card">
+        <div class="info-header">
+          <div class="info-icon">
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <h3 class="info-title">Инструкция</h3>
+        </div>
+        <div class="info-content">
+          <p>Используйте кнопки вверху для переключения между таблицей и дашбордом.</p>
+          <p class="highlight">Функции:</p>
+          <ul>
+            <li>Просмотр аналитических данных</li>
+            <li>Отправка сообщений через вебхук</li>
+            <li>Автоматическая передача времени и даты</li>
+           <li>Просмотр аналитических данных</li>
+           <li>Отправка сообщений через вебхук</li>
+           <li>Автоматическая передача времени и даты</li>
+           <li>Просмотр аналитических данных</li>
+           <li>Отправка сообщений через вебхук</li>
+           <li>Автоматическая передача времени и даты</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="info-card">
+        <div class="info-header">
+          <div class="info-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h3 class="info-title">Аналитические подсказки</h3>
+        </div>
+        <div class="info-content">
+          <p class="highlight">Ключевые показатели:</p>
+          <ul>
+            <li>Продажи: <span class="highlight">+12.5%</span> за месяц</li>
+            <li>Конверсия: <span class="highlight">24.7%</span></li>
+            <li>Новые клиенты: <span class="highlight">+8.3%</span> за неделю</li>
+          </ul>
+          <p>Для более детального анализа используйте переключение между представлениями данных.</p>
+
+	  <div class="social-section" style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(100, 255, 218, 0.2);">
+	      
+      
+	      <div style="display: flex; justify-content: space-around; gap: 15px; margin-bottom: 20px;">
+	        <!-- WhatsApp -->
+	        <a href="https://wa.me/77771234567" target="_blank" class="social-btn" style="--social-color: #25D366;">
+	          <div class="social-icon" style="background: linear-gradient(135deg, rgba(37, 211, 102, 0.15), transparent);">
+	            <i class="fab fa-whatsapp"></i>
+	          </div>
+	        </a>
+        
+	        <!-- Telegram -->
+	        <a href="https://t.me/ibdatalink" target="_blank" class="social-btn" style="--social-color: #0088cc;">
+	          <div class="social-icon" style="background: linear-gradient(135deg, rgba(0, 136, 204, 0.15), transparent);">
+	            <i class="fab fa-telegram"></i>
+	          </div>
+	        </a>
+        
+	        <!-- Instagram -->
+	        <a href="https://instagram.com/ibdatalink" target="_blank" class="social-btn" style="--social-color: #E1306C;">
+	          <div class="social-icon" style="background: linear-gradient(135deg, rgba(225, 48, 108, 0.15), transparent);">
+	            <i class="fab fa-instagram"></i>
+	          </div>
+	        </a>
+	      </div>
+	  <p style="text-align: center; margin-top: 10px; font-size: 14px; color: var(--accent); font-style: italic;">
+	         <i class="fas fa-cloc"></i> ⚡ Хотите узнать больше прямо сейчас? Напишите нам!
+	       </p>
+	      
+	    </div>
+	  </div>
+	</div>
+  </main>
+  
+  <footer>
+    <div class="message-input-container">
+      <input type="text" id="message-input" placeholder="Написать сообщение...">
+      <button id="send-btn">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+      <div class="message-notification" id="messageNotification">
+        <i class="fas fa-check-circle"></i> Сообщение отправлено через вебхук
+      </div>
+    </div>
+    
+    <div class="status-panel">
+      <i class="fas fa-circle" style="color: #8ed16f;"></i>
+      <span id="statusText">Статус: онлайн | Данные обновлены: 18.08.2023</span>
+    </div>
+  </footer>
+
+  <script>
+    const tableBtn = document.getElementById('tableBtn');
+    const dashboardBtn = document.getElementById('dashboardBtn');
+    const contentFrame = document.getElementById('contentFrame');
+    const dashboardContainer = document.getElementById('dashboardContainer');
+    const dashboardFrame = document.getElementById('dashboardFrame');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const contentTitle = document.getElementById('content-title');
+    const sendBtn = document.getElementById('send-btn');
+    const messageInput = document.getElementById('message-input');
+    const messageNotification = document.getElementById('messageNotification');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const statusText = document.getElementById('statusText');
+    const frameOverlays = document.querySelectorAll('.frame-overlay');
+    
+    // Вебхук URL
+    const WEBHOOK_URL = 'https://workalmaty.ru/webhook-test/281ce8ad-218c-4f84-8afa-4467af1e7778';
+    
+    // Обновление статуса времени
+    function updateDateTime() {
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('ru-RU', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+      const timeStr = now.toLocaleTimeString('ru-RU');
+      
+      statusText.textContent = `Статус: онлайн | Данные обновлены: ${dateStr} ${timeStr}`;
+    }
+    
+    // Показать/скрыть оверлеи
+    function toggleOverlays(showTable) {
+      frameOverlays.forEach(overlay => {
+        if (showTable) {
+          overlay.style.display = overlay.classList.contains('table-overlay-top') || 
+                                 overlay.classList.contains('table-overlay-bottom') ? 'flex' : 'none';
+        } else {
+          overlay.style.display = overlay.classList.contains('dashboard-overlay-top') ? 'flex' : 'none';
+        }
+      });
+    }
+    
+    // Инициализация оверлеев
+    function initOverlays() {
+      toggleOverlays(true);
+    }
+    
+    // Обновляем дату/время каждую минуту
+    setInterval(updateDateTime, 60000);
+    updateDateTime();
+    
+    // Показать индикатор загрузки
+    function showLoader() {
+      loadingOverlay.classList.add('active');
+    }
+    
+    // Скрыть индикатор загрузки
+    function hideLoader() {
+      loadingOverlay.classList.remove('active');
+    }
+    
+    // Имитация загрузки
+    function simulateLoading(callback) {
+      showLoader();
+      setTimeout(() => {
+        hideLoader();
+        if (callback) callback();
+      }, 800);
+    }
+    
+    // Переключение на таблицу
+    tableBtn.addEventListener('click', () => {
+      if (tableBtn.classList.contains('active')) return;
+      
+      simulateLoading(() => {
+        // Показываем таблицу, скрываем дашборд
+        contentFrame.style.display = 'block';
+        dashboardContainer.style.display = 'none';
+        
+        contentTitle.textContent = "Аналитическая таблица";
+        tableBtn.classList.add('active');
+        dashboardBtn.classList.remove('active');
+        toggleOverlays(true);
+      });
+    });
+    
+    // Переключение на дашборд
+    dashboardBtn.addEventListener('click', () => {
+      if (dashboardBtn.classList.contains('active')) return;
+      
+      simulateLoading(() => {
+        // Показываем дашборд, скрываем таблицу
+        contentFrame.style.display = 'none';
+        dashboardContainer.style.display = 'block';
+        
+        // Прокручиваем вниз для показа нижней части
+        setTimeout(() => {
+          dashboardFrame.contentWindow.scrollTo(0, document.body.scrollHeight);
+        }, 1000);
+        
+        contentTitle.textContent = "Визуальный дашборд";
+        dashboardBtn.classList.add('active');
+        tableBtn.classList.remove('active');
+        toggleOverlays(false);
+      });
+    });
+    
+    // Обновление данных
+    refreshBtn.addEventListener('click', () => {
+      simulateLoading(() => {
+        if (tableBtn.classList.contains('active')) {
+          contentFrame.contentWindow.location.reload();
+        } else {
+          dashboardFrame.contentWindow.location.reload();
+        }
+        updateDateTime();
+      });
+    });
+    
+    // Отправка сообщения через вебхук
+    async function sendMessageToWebhook(message) {
+      // Получаем текущую дату и время
+      const now = new Date();
+      const date = now.toLocaleDateString('ru-RU', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+      const time = now.toLocaleTimeString('ru-RU');
+      
+      // Формируем данные для отправки
+      const webhookData = {
+        message: message,
+        time: time,
+        date: date
+      };
+      
+      try {
+        // Отправляем данные на вебхук
+        const response = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(webhookData)
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // Показать уведомление об успешной отправке
+        showNotification('Сообщение успешно отправлено через вебхук', true);
+        
+        return true;
+      } catch (error) {
+        console.error('Ошибка отправки сообщения:', error);
+        
+        // Показать уведомление об ошибке
+        showNotification(`Ошибка отправки: ${error.message}`, false);
+        
+        return false;
+      }
+    }
+    
+    // Показать уведомление
+    function showNotification(message, isSuccess) {
+      messageNotification.innerHTML = `<i class="fas ${isSuccess ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${message}`;
+      messageNotification.className = 'message-notification';
+      if (!isSuccess) {
+        messageNotification.classList.add('error');
+      }
+      messageNotification.classList.add('show');
+      
+      // Скрыть уведомление через 3 секунды
+      setTimeout(() => {
+        messageNotification.classList.remove('show');
+      }, 3000);
+    }
+    
+    // Отправка сообщения
+    sendBtn.addEventListener('click', async () => {
+      const message = messageInput.value.trim();
+      if(message !== '') {
+        // Показать состояние отправки
+        const originalBtnHtml = sendBtn.innerHTML;
+        sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        sendBtn.disabled = true;
+        
+        // Отправить сообщение через вебхук
+        await sendMessageToWebhook(message);
+        
+        // Очистить поле ввода
+        messageInput.value = '';
+        
+        // Восстановить кнопку
+        sendBtn.innerHTML = originalBtnHtml;
+        sendBtn.disabled = false;
+      }
+    });
+    
+    // Отправка по нажатию Enter
+    messageInput.addEventListener('keypress', async (e) => {
+      if(e.key === 'Enter') {
+        await sendBtn.click();
+      }
+    });
+    
+    // Инициализация
+    document.addEventListener('DOMContentLoaded', function() {
+      // Имитация начальной загрузки
+      setTimeout(hideLoader, 1200);
+      
+      // Инициализация оверлеев
+      initOverlays();
+      
+      // Скрываем верхнюю плашку для таблицы
+      document.querySelector('.table-overlay-top').style.display = 'none';
+    });
+  </script>
+</body>
+</html>
